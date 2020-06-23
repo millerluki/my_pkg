@@ -8,16 +8,23 @@ class Publisher(Node):
     def __init__(self):
         super().__init__('timer_publisher')
         self.get_logger().info("Running...")
+
+        self.declare_parameter("frequency", 0.5)
+        self.declare_parameter("start_index", 0.0)
+
         self._publisher = self.create_publisher(Float64, 'topic_a', 10)
-        self._timer_period = 1.0  # seconds
+
+        frequency = self.get_parameter("frequency").get_parameter_value().double_value
+        self._timer_period = 1/frequency
         self._timer = self.create_timer(self._timer_period, self._cb_timer)
-        self._i = 0.0
+
+        self._i= self.get_parameter("start_index").get_parameter_value().double_value
 
     def _cb_timer(self):
         msg = Float64()
-        msg.data = self._i
+        msg.data = float(self._i)
         self._publisher.publish(msg)
-        self._i += self._timer_period
+        self._i = self._i + 1
 
 
 def main(args=None):

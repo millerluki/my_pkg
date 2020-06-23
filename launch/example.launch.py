@@ -6,7 +6,11 @@ def generate_launch_description():
         Node(
             package='my_pkg',
             executable='publisher',
-            name='publisher'
+            name='publisher',
+            parameters=[
+                {"frequency": 10.0},
+                {"start_index": 100.0}
+            ]
         ),
         Node(
             package='my_pkg',
